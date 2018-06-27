@@ -3,9 +3,16 @@ package Bean;
 public class Material {
 	String sn;
 	String name;
+	String type;
 	float number;
 	float cost;
 	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public String getSn() {
 		return sn;
 	}
