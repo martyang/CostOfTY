@@ -1,4 +1,3 @@
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +14,10 @@ import javax.swing.JScrollPane;
 public class ChoiceFrame {
 	private String frameName = "碳云成本核算工具";
 	private String choiceType;
-	private String choicePatch;
+	private File[] chooseFiles;
+	private static String MATERIAL = "物料成本";
+	private static String MANUAL = "人工成本";
+	private static String QC = "QC成本";
 	
 	public ChoiceFrame() {
 		// TODO Auto-generated constructor stub
@@ -41,7 +43,16 @@ public class ChoiceFrame {
 		type.addElement("QC成本");
 		JComboBox<String> typeCombobox = new JComboBox<>(type);
 		typeCombobox.setSelectedItem(0);
+		choiceType = (String) typeCombobox.getSelectedItem();
+		typeCombobox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				choiceType = (String) typeCombobox.getSelectedItem();
+			}
+		});
 		JScrollPane typeScrollPanel = new JScrollPane(typeCombobox);
+		
 		//文件选择按钮
 		JFileChooser fileChooser = new JFileChooser();
 		JButton openFile = new JButton("选择文件");
@@ -51,8 +62,8 @@ public class ChoiceFrame {
 			public void actionPerformed(ActionEvent e) {
 				int returnValue = fileChooser.showOpenDialog(frame);
 				if(returnValue == JFileChooser.APPROVE_OPTION) {
-					File chooseFile = fileChooser.getSelectedFile();
-					System.out.println("选择文件："+chooseFile.getPath());
+					chooseFiles = fileChooser.getSelectedFiles();
+					
 				}
 			}
 		});	
@@ -62,7 +73,14 @@ public class ChoiceFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				if(choiceType.equals(MATERIAL)) {
+					
+					System.out.println("计算物料成本");
+				}else if(choiceType.equals(MANUAL)) {
+					System.out.println("计算人工成本");
+				}else if(choiceType.equals(QC)) {
+					System.out.println("计算QC成本");
+				}
 				
 			}
 		});

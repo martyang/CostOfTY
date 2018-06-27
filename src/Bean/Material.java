@@ -1,11 +1,11 @@
 package Bean;
 
 public class Material {
-	String sn;
-	String name;
-	String type;
-	float number;
-	float cost;
+	String sn;//物料号
+	String name;//物料名称
+	String type;//检验类型
+	float number;//使用量
+	float cost;//消耗金额
 	
 	public String getType() {
 		return type;

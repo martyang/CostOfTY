@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import Bean.Material;
@@ -14,19 +13,8 @@ public class CostCalcuation {
 		List<Material> list = null;
 		ChoiceFrame mainFrame = new ChoiceFrame();
 		mainFrame.showFrame();
-		ReadExcel readExcel = new ReadExcel(new File("D:/JAVA/material.xls"));
-		try {
-			list =  readExcel.getMaterData();
-			for(int i=0;i<list.size();i++) {
-				System.out.println(list.get(i).getSn());
-			}
-		} catch (BiffException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ReadExcel readExcel = new ReadExcel(new File("D:/JAVA/³ÌÐò²âÊÔ/³ÌÐò²âÊÔ/material.xls"));
+		
 	}
 
 }
