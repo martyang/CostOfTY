@@ -11,14 +11,14 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
-public class ReadExcel {
+public class ReadMaterial {
 	private File file;
 	private ArrayList<Material> faeces ;//粪便提取
 	private ArrayList<Material> mouth ;//口腔提取
 	private ArrayList<Material> plasma;//血浆提取
 	private ArrayList<Material> blood;//血液提取
 	
-	public ReadExcel(File file) {
+	public ReadMaterial(File file) {
 		this.file = file;
 		faeces = new ArrayList<>();
 		mouth = new ArrayList<>();
