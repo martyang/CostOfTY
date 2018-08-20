@@ -138,6 +138,14 @@ public class ReadMaterial {
 		return ratio;
 	}
 	
+	public float getMouthRatio(String sn){
+		float ratio = 0;
+		float faece = getMouthNumber(sn)*mouthProduct;
+		float sum = getFaecesNumber(sn)*faeceProduct+getMouthNumber(sn)*mouthProduct
+				+getBloodNumber(sn)*bloodProduct+getDNANumber(sn)*dnaProduct;
+		ratio = faece/sum;
+		return ratio;
+	}
 	/**
 	 * 获取粪便提取中制定编码的物料的使用量
 	 * @param sn 物料编码
