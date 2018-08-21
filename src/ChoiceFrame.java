@@ -12,13 +12,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
-import Util.ReadMaterial;
+import Util.MaterialCost;
 import jxl.read.biff.BiffException;
 
 public class ChoiceFrame {
 	private String frameName = "碳云成本核算工具";
 	private String choiceType;
-	private File chooseFile;
+	private File chooseFile = null;
 	private File[] chooseFiles;
 	private static String MATERIAL = "物料成本";
 	private static String MANUAL = "人工成本";
@@ -79,9 +79,11 @@ public class ChoiceFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(choiceType.equals(MATERIAL)) {
+				if(chooseFile==null) {
+					
+				}else if(choiceType.equals(MATERIAL)) {
 					System.out.println(chooseFile.getName());
-					ReadMaterial readMaterial = new ReadMaterial(chooseFile);
+					MaterialCost readMaterial = new MaterialCost(chooseFile);
 					try {
 						readMaterial.initData();
 					} catch (BiffException e1) {

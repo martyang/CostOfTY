@@ -3,20 +3,25 @@ package Util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.logging.*;
 import Bean.Material;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 
-public class ReadMaterial {
+public class MaterialCost {
 	private static String FAECES = "粪便提取";
 	private static String MOUTH = "唾液提取";
 	private static String BLOOD = "血液提取";
-	private static String DAN = "核酸提取";
+	private static String DNA = "核酸提取";
 	private static String PRODUCT = "产量表";
-	private File file;
+	private static String COST = "实际耗用量";
+	private File file;	//原始資料文件
 	private ArrayList<Material> faeces ;//粪便提取
 	private ArrayList<Material> mouth ;//唾液提取
 	private ArrayList<Material> dna;//核酸提取
@@ -26,9 +31,13 @@ public class ReadMaterial {
 	private int bloodProduct;
 	private int dnaProduct;
 	private int rnaProduct;
+	private File costFile;	//保存計算的結果文件
+	private static Logger log = LogFactory.getGlobalLog();
 	
-	public ReadMaterial(File file) {
+	public MaterialCost(File file) {
 		this.file = file;
+		costFile = new File(file.getParent()+"\\結果文件");
+		costFile.mkdirs();
 		faeces = new ArrayList<>();
 		mouth = new ArrayList<>();
 		dna = new ArrayList<>();
@@ -59,7 +68,7 @@ public class ReadMaterial {
 				materList = blood;
 				sheet = workbook.getSheet(type);
 				readMaterial(sheet, materList);
-			}else if(type.equals(DAN)){
+			}else if(type.equals(DNA)){
 				materList = dna;
 				sheet = workbook.getSheet(type);
 				readMaterial(sheet, materList);
@@ -67,36 +76,44 @@ public class ReadMaterial {
 				sheet = workbook.getSheet(type);
 				System.out.println(""+sheet.getName());
 				readMaterial(sheet, null);
+			}else if(type.equals(COST)) {
+				sheet = workbook.getSheet(type);
+				try {
+					allotCost(sheet);
+				} catch (WriteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}		
 	}
 	
 	private void readMaterial(Sheet sheet,ArrayList<Material> list){
 		
-		if(sheet.getName().equals(PRODUCT)){
+		if(sheet.getName().equals(PRODUCT)){	//读取产量表
 			for(int i=1;i<sheet.getRows();i++){
-				for(int j=0;j<sheet.getColumns();j++){
-					String content = sheet.getCell(j, i).getContents();
+				
+					String content = sheet.getCell(0, i).getContents();
 					if(content.equals("DNA提取")){
-						content = sheet.getCell(j+1, i).getContents();
+						content = sheet.getCell(1, i).getContents();
 						if(content.equals("粪便")){
-							faeceProduct = Integer.valueOf(sheet.getCell(j+2, i).getContents());
+							faeceProduct = Integer.valueOf(sheet.getCell(2, i).getContents());
 						}else if(content.equals("核酸")){
-							dnaProduct = Integer.valueOf(sheet.getCell(j+2, i).getContents());
+							dnaProduct = Integer.valueOf(sheet.getCell(2, i).getContents());
 						}else if (content.equals("血液")){
-							bloodProduct = Integer.valueOf(sheet.getCell(j+2, i).getContents());
+							bloodProduct = Integer.valueOf(sheet.getCell(2, i).getContents());
 						}else if(content.equals("唾液")){
-							mouthProduct = Integer.valueOf(sheet.getCell(j+2, i).getContents());
+							mouthProduct = Integer.valueOf(sheet.getCell(2, i).getContents());
 						}
 					}else {
+						content = sheet.getCell(1, i).getContents();
 						if(content.equals("血液")){
-							rnaProduct = Integer.valueOf(sheet.getCell(j+1, i).getContents());
+							rnaProduct = Integer.valueOf(sheet.getCell(2, i).getContents());
+							log.info("RNA产量："+rnaProduct);
 						}
-					}
-				}
-				
+					}	
 			}	
-		}else{
+		}else{		//读取标准物料
 			//i为行数
 			for(int i=1;i<sheet.getRows();i++) {
 				Material material = new Material();
@@ -120,15 +137,81 @@ public class ReadMaterial {
 					
 				}
 				if(material.getSn()!=null) {
-//					System.out.println(material.getName());
+//					log.info("料号："+material.getSn()+"名称："+material.getName()+"使用量："+material.getNumber());
 					list.add(material);
 				}
 				
 			}
-		}
-		System.out.println("产量"+faeceProduct+";"+dnaProduct+";"+bloodProduct+";"+mouthProduct);
+		}	
 	}
 	
+	public void allotCost(Sheet sheet) throws IOException, WriteException {
+		float faeceCost;
+		float mouthCost;
+		float bloodCost;
+		float dnaCost;
+		String sn;
+		String name;
+		String total;
+		float cost;
+		Label lable =null;
+		WritableWorkbook workbook = null ;
+		WritableSheet matrialSheet = null;
+		String titles[] = {"物料编码","物料名称","总金额",MOUTH,BLOOD,DNA,FAECES};
+		
+		//初始化物料表格
+		File materialFile = new File(costFile.getAbsolutePath()+"\\物料成本.xls");
+		if(materialFile.exists()) {
+			materialFile.delete();
+		}
+		materialFile.createNewFile();
+		workbook = Workbook.createWorkbook(materialFile);
+		if(workbook.getNumberOfSheets()==0) {
+			matrialSheet = workbook.createSheet("物料成本", 0);
+		}else {
+			matrialSheet = workbook.getSheet(0);
+			matrialSheet.setName("物料成本");
+		}
+		//初始化列标题
+		for(int j=0;j<titles.length;j++) {
+			lable = new Label(j, 0, titles[j]);
+			matrialSheet.addCell(lable);
+		}
+		
+		for(int i=1;i<sheet.getRows();i++) {
+			sn = sheet.getCell(0, i).getContents();
+			name = sheet.getCell(1, i).getContents();
+			total = sheet.getCell(5, i).getContents();
+			cost = Float.parseFloat(total);
+			faeceCost = getFaeceRatio(sn)*cost;
+			mouthCost = getMouthRatio(sn)*cost;
+			bloodCost = getBloodRatio(sn)*cost;
+			dnaCost = getDNARatio(sn)*cost;
+			log.info(sn);
+			
+			lable = new Label(0, i, sn);
+			matrialSheet.addCell(lable);
+			lable = new Label(1, i, name);
+			matrialSheet.addCell(lable);
+			lable = new Label(2, i, total);
+			matrialSheet.addCell(lable);
+			lable = new Label(3, i, mouthCost+"");
+			matrialSheet.addCell(lable);
+			lable = new Label(4, i, bloodCost+"");
+			matrialSheet.addCell(lable);
+			lable = new Label(5, i, dnaCost+"");
+			matrialSheet.addCell(lable);
+			lable = new Label(6, i, faeceCost+"");
+			matrialSheet.addCell(lable);
+		}
+		workbook.write();
+		workbook.close();
+	}
+	/**
+	 * 获取指定sn物料的产量比例
+	 * @param sn
+	 * @return 
+	 */
 	public float getFaeceRatio(String sn){
 		float ratio = 0;
 		float faece = getFaecesNumber(sn)*faeceProduct;
@@ -137,13 +220,43 @@ public class ReadMaterial {
 		ratio = faece/sum;
 		return ratio;
 	}
-	
+	/**
+	 * 获取指定sn物料的产量比例
+	 * @param sn
+	 * @return 
+	 */
 	public float getMouthRatio(String sn){
 		float ratio = 0;
-		float faece = getMouthNumber(sn)*mouthProduct;
+		float mouth = getMouthNumber(sn)*mouthProduct;
 		float sum = getFaecesNumber(sn)*faeceProduct+getMouthNumber(sn)*mouthProduct
 				+getBloodNumber(sn)*bloodProduct+getDNANumber(sn)*dnaProduct;
-		ratio = faece/sum;
+		ratio = mouth/sum;
+		return ratio;
+	}
+	/**
+	 * 获取指定sn物料的产量比例
+	 * @param sn
+	 * @return 
+	 */
+	public float getBloodRatio(String sn){
+		float ratio = 0;
+		float blood = getBloodNumber(sn)*bloodProduct;
+		float sum = getFaecesNumber(sn)*faeceProduct+getMouthNumber(sn)*mouthProduct
+				+getBloodNumber(sn)*bloodProduct+getDNANumber(sn)*dnaProduct;
+		ratio = blood/sum;
+		return ratio;
+	}
+	/**
+	 * 获取指定sn物料的产量比例
+	 * @param sn
+	 * @return 
+	 */
+	public float getDNARatio(String sn){
+		float ratio = 0;
+		float dna = getDNANumber(sn)*dnaProduct;
+		float sum = getFaecesNumber(sn)*faeceProduct+getMouthNumber(sn)*mouthProduct
+				+getBloodNumber(sn)*bloodProduct+getDNANumber(sn)*dnaProduct;
+		ratio = dna/sum;
 		return ratio;
 	}
 	/**
