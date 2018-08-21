@@ -130,7 +130,7 @@ public class MaterialCost {
 							material.setSn(content);	//读取序列号
 						}else if(j==2){
 							material.setName(content);	//物料名称
-						}else if(j==7) {
+						}else if(j==9) {
 							material.setNumber(Float.parseFloat(content));	//物料使用量
 						}
 					}
