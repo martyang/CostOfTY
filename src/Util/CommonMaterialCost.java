@@ -3,13 +3,16 @@ package Util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import Bean.Material;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.format.Colour;
 import jxl.read.biff.BiffException;
+import jxl.write.Font;
 import jxl.write.Label;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
@@ -23,7 +26,7 @@ public class CommonMaterialCost {
 	private WritableSheet resultSheet;
 	private Sheet productSheet; 
 	private static String PRODUCT = "产量表";
-	private static String COST = "实际耗用量";
+	private static String COST = "实际物料消耗表";
 	
 	public CommonMaterialCost(File file) {
 		this.file = file;
@@ -85,13 +88,27 @@ public class CommonMaterialCost {
 			resultSheet.addCell(lable);
 			lable = new Label(j++, i, totalCost+"");
 			resultSheet.addCell(lable);
-			for (Material material : standMaterial) {
-				float materialCost = material.getNumber()*material.getProduct()/sum;
-//				System.out.println(materialCost);
-				lable = new Label(j++, i,materialCost*totalCost+"" );
-				resultSheet.addCell(lable);
-			}
-			
+			if(standMaterial.isEmpty()) {
+				WritableCellFormat format = new WritableCellFormat();
+				format.setBackground(Colour.RED);
+				for(int k=0;k<sheets.length-2;k++) {
+					lable = new Label(j++, i,"NA" ,format);
+					resultSheet.addCell(lable);
+				}			
+			}else {
+				for (int m=0;m<sheets.length-2;m++) {
+					
+					if(m<standMaterial.size()) {
+						Material material = standMaterial.get(m);
+						float materialCost = material.getNumber()*material.getProduct()/sum;
+						lable = new Label(j++, i,materialCost*totalCost+"" );
+					}else {
+						lable = new Label(j++, i,"0" );
+					}
+					
+					resultSheet.addCell(lable);
+				}
+			}	
 		}
 		
 		workbookResult.write();
