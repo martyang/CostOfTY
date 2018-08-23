@@ -6,7 +6,15 @@ public class Material {
 	String type;//检验类型
 	float number;//使用量
 	float cost;//消耗金额
+	int product;//产量
 	
+	public int getProduct() {
+		return product;
+	}
+	public void setProduct(int product) {
+		this.product = product;
+	}
+
 	public String getType() {
 		return type;
 	}

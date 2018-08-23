@@ -12,8 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
-import Util.MaterialCost;
+import Util.CommonMaterialCost;
 import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 
 public class ChoiceFrame {
 	private String frameName = "碳云成本核算工具";
@@ -83,19 +84,14 @@ public class ChoiceFrame {
 					
 				}else if(choiceType.equals(MATERIAL)) {
 					System.out.println(chooseFile.getName());
-					MaterialCost readMaterial = new MaterialCost(chooseFile);
+					CommonMaterialCost comMaterial = new CommonMaterialCost(chooseFile);
 					try {
-						readMaterial.initData();
-					} catch (BiffException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
+						comMaterial.initCostData();
+					} catch (BiffException | WriteException | IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					float number = readMaterial.getBloodNumber("1020004");
 					System.out.println("计算物料成本");
-					System.out.println("使用量"+number);
 				}else if(choiceType.equals(MANUAL)) {
 					System.out.println("计算人工成本");
 				}else if(choiceType.equals(QC)) {
