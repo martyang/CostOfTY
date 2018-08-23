@@ -9,10 +9,8 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.format.Colour;
 import jxl.read.biff.BiffException;
-import jxl.write.Font;
 import jxl.write.Label;
 import jxl.write.WritableCellFormat;
-import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
@@ -96,18 +94,21 @@ public class CommonMaterialCost {
 					resultSheet.addCell(lable);
 				}			
 			}else {
-				for (int m=0;m<sheets.length-2;m++) {
-					
-					if(m<standMaterial.size()) {
-						Material material = standMaterial.get(m);
-						float materialCost = material.getNumber()*material.getProduct()/sum;
-						lable = new Label(j++, i,materialCost*totalCost+"" );
-					}else {
-						lable = new Label(j++, i,"0" );
-					}
-					
+//				for (int m=0;m<sheets.length-2;m++) {
+					String type;
+//					if(m<standMaterial.size()) {
+//						Material material = standMaterial.get(m);
+//						type = material.getType();
+//						float materialRatio = material.getNumber()*material.getProduct()/sum;
+//						lable = new Label(j+getIndex(type), i, materialRatio*totalCost+"" );
+//					}
+				for (Material material : standMaterial) {
+					type = material.getType();
+					float materialRatio = material.getNumber()*material.getProduct()/sum;
+					lable = new Label(j+getIndex(type), i, materialRatio*totalCost+"" );
 					resultSheet.addCell(lable);
 				}
+								
 			}	
 		}
 		
@@ -115,6 +116,14 @@ public class CommonMaterialCost {
 		workbookResult.close();
 	}
 
+	private int getIndex(String type) {
+		for(int i=0;i<sheets.length;i++) {
+			if(sheets[i].getName().equals(type)) {
+				return i;
+			}
+		}
+		return 0;
+	}
 	/**
 	 * 查找表格中料号为sn的所有标准物料
 	 * @param sheets
@@ -152,15 +161,13 @@ public class CommonMaterialCost {
 				material.setNumber(Float.valueOf(sheet.getCell(5, i).getContents()));
 				material.setType(sheet.getName());
 				material.setProduct(searchProduct(sheet));
-				System.out.println("标准用量:"+material.getNumber());
-				System.out.println("产量"+material.getProduct());
 				return material;
 			}
 		}		
 		return null;
 	}
 	/**
-	 * 
+	 * 查找指定sheet表中的产量
 	 * @param productSheet
 	 * @return
 	 */

@@ -20,7 +20,7 @@ public class ChoiceFrame {
 	private String frameName = "碳云成本核算工具";
 	private String choiceType;
 	private File chooseFile = null;
-	private File[] chooseFiles;
+//	private File[] chooseFiles;
 	private static String MATERIAL = "物料成本";
 	private static String MANUAL = "人工成本";
 	private static String QC = "QC成本";
@@ -91,7 +91,7 @@ public class ChoiceFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					System.out.println("计算物料成本");
+					System.out.println("计算物料成本完成");
 				}else if(choiceType.equals(MANUAL)) {
 					System.out.println("计算人工成本");
 				}else if(choiceType.equals(QC)) {
