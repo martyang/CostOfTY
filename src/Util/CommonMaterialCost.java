@@ -121,14 +121,14 @@ public class CommonMaterialCost {
 		workbookResult.close();
 	}
 
-	private int getIndex(String type) {
-		for(int i=0;i<sheets.length;i++) {
-			if(sheets[i].getName().equals(type)) {
-				return i;
-			}
-		}
-		return 0;
-	}
+//	private int getIndex(String type) {
+//		for(int i=0;i<sheets.length;i++) {
+//			if(sheets[i].getName().equals(type)) {
+//				return i;
+//			}
+//		}
+//		return 0;
+//	}
 	/**
 	 * 查找表格中料号为sn的所有标准物料
 	 * @param sheets
