@@ -159,8 +159,11 @@ public class CommonMaterialCost {
 				material.setSn(sn);
 				material.setName(sheet.getCell(1, i).getContents());
 				material.setNumber(Float.valueOf(sheet.getCell(5, i).getContents()));
+				System.out.println(sheet.getCell(5, i).getContents());
 				material.setType(sheet.getName());
 				material.setProduct(searchProduct(sheet));
+				System.out.println(sn);
+				System.out.println(material.getNumber());
 				return material;
 			}
 		}		
