@@ -10,6 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import Util.CommonMaterialCost;
@@ -91,6 +92,7 @@ public class ChoiceFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					JOptionPane.showMessageDialog(null, "计算完成！", "提示", JOptionPane.INFORMATION_MESSAGE);
 					System.out.println("计算物料成本完成");
 				}else if(choiceType.equals(MANUAL)) {
 					System.out.println("计算人工成本");
