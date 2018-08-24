@@ -95,19 +95,38 @@ public class CommonMaterialCost {
 				}			
 			}else {
 //				for (int m=0;m<sheets.length-2;m++) {
-					String type;
+					
 //					if(m<standMaterial.size()) {
 //						Material material = standMaterial.get(m);
 //						type = material.getType();
 //						float materialRatio = material.getNumber()*material.getProduct()/sum;
 //						lable = new Label(j+getIndex(type), i, materialRatio*totalCost+"" );
 //					}
-				for (Material material : standMaterial) {
-					type = material.getType();
-					float materialRatio = material.getNumber()*material.getProduct()/sum;
-					lable = new Label(j+getIndex(type), i, materialRatio*totalCost+"" );
-					resultSheet.addCell(lable);
+				String type;
+				boolean isExist;
+				for(int m=0;m<sheets.length-2;m++) {
+					isExist = false;
+					type = sheets[m].getName();
+					for (Material material : standMaterial) {
+						if(type.equals(material.getType())) {
+							isExist = true;
+							float materialRatio = material.getNumber()*material.getProduct()/sum;
+							lable = new Label(j++, i, materialRatio*totalCost+"" );
+							resultSheet.addCell(lable);
+						}
+					}
+					if(!isExist) {
+						lable = new Label(j++, i, "0" );
+						resultSheet.addCell(lable);
+					}
+					
 				}
+//				for (Material material : standMaterial) {
+//					type = material.getType();
+//					float materialRatio = material.getNumber()*material.getProduct()/sum;
+//					lable = new Label(j+getIndex(type), i, materialRatio*totalCost+"" );
+//					resultSheet.addCell(lable);
+//				}
 								
 			}	
 		}
@@ -159,7 +178,6 @@ public class CommonMaterialCost {
 				material.setSn(sn);
 				material.setName(sheet.getCell(1, i).getContents());
 				material.setNumber(Float.valueOf(sheet.getCell(5, i).getContents()));
-				System.out.println(sheet.getCell(5, i).getContents());
 				material.setType(sheet.getName());
 				material.setProduct(searchProduct(sheet));
 				System.out.println(sn);
