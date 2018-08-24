@@ -94,14 +94,7 @@ public class CommonMaterialCost {
 					resultSheet.addCell(lable);
 				}			
 			}else {
-//				for (int m=0;m<sheets.length-2;m++) {
-					
-//					if(m<standMaterial.size()) {
-//						Material material = standMaterial.get(m);
-//						type = material.getType();
-//						float materialRatio = material.getNumber()*material.getProduct()/sum;
-//						lable = new Label(j+getIndex(type), i, materialRatio*totalCost+"" );
-//					}
+
 				String type;
 				boolean isExist;
 				for(int m=0;m<sheets.length-2;m++) {
@@ -120,14 +113,7 @@ public class CommonMaterialCost {
 						resultSheet.addCell(lable);
 					}
 					
-				}
-//				for (Material material : standMaterial) {
-//					type = material.getType();
-//					float materialRatio = material.getNumber()*material.getProduct()/sum;
-//					lable = new Label(j+getIndex(type), i, materialRatio*totalCost+"" );
-//					resultSheet.addCell(lable);
-//				}
-								
+				}						
 			}	
 		}
 		
