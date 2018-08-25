@@ -43,7 +43,7 @@ public class CostAllot {
 			if(content.equals("人工成本")) {
 				Cell[] cells = sheet.getRow(i);
 				for (Cell cell : cells) {
-					if(!cell.getContents().equals(content)) {
+					if(!cell.getContents().equals("人工成本")) {
 						OperateBean operate = new OperateBean();
 						operate.setType(type);
 						operate.setName(cell.getContents());
@@ -56,8 +56,9 @@ public class CostAllot {
 				Cell[] cells = sheet.getRow(i);
 				int j = 0;
 				for (Cell cell : cells) {
-					if(!cell.getContents().equals(content)) {
+					if(!cell.getContents().equals("标准工时")) {
 						content = cell.getContents();
+//						System.out.println(content);
 						opetateList.get(j++).setManhour(Float.parseFloat(content));
 					}
 					
@@ -66,8 +67,9 @@ public class CostAllot {
 				Cell[] cells = sheet.getRow(i);
 				int j = 0;
 				for (Cell cell : cells) {
-					if(!cell.getContents().equals(content)) {
+					if(!cell.getContents().equals("产量")) {
 						content = cell.getContents();
+//						System.out.println(content);
 						opetateList.get(j++).setProduct(Integer.parseInt(content));
 					}
 					
@@ -75,7 +77,7 @@ public class CostAllot {
 			}else if(content.equals("直接材料")) {
 				int number = sheet.getColumns();
 				Cell[] cells = sheet.getRow(i);
-				System.out.println("列数："+number);
+//				System.out.println("列数："+number);
 //				float total = Float.parseFloat(cells[1].getContents());
 				int j=0;
 				OperateBean operate;
@@ -92,7 +94,9 @@ public class CostAllot {
 				}
 				for (OperateBean operateBean : opetateList) {
 					float manRatio = operateBean.getManhour()*operateBean.getProduct()/sumManal;
+//					System.out.println(operateBean.getManhour());
 					operateBean.setManalCoat(manRatio*total);
+//					System.out.println(sumManal);
 				}
 			}else if(content.equals("直接折旧")) {
 				float total = Float.parseFloat(sheet.getCell(1, i).getContents());
