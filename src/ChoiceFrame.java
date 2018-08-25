@@ -14,8 +14,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import Util.CommonMaterialCost;
+import Util.CostAllot;
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 
 public class ChoiceFrame {
 	private String frameName = "碳云成本核算工具";
@@ -23,7 +25,7 @@ public class ChoiceFrame {
 	private File chooseFile = null;
 //	private File[] chooseFiles;
 	private static String MATERIAL = "物料成本";
-	private static String MANUAL = "人工成本";
+	private static String ALLOCT = "分配全部成本";
 	private static String QC = "QC成本";
 	
 	public ChoiceFrame() {
@@ -46,7 +48,7 @@ public class ChoiceFrame {
 		//成本类型选择框
 		DefaultComboBoxModel<String> type = new DefaultComboBoxModel<>();
 		type.addElement(MATERIAL);
-		type.addElement(MANUAL);
+		type.addElement(ALLOCT);
 		type.addElement(QC);
 		JComboBox<String> typeCombobox = new JComboBox<>(type);
 		typeCombobox.setSelectedItem(0);
@@ -93,9 +95,24 @@ public class ChoiceFrame {
 						e1.printStackTrace();
 					}
 					JOptionPane.showMessageDialog(null, "计算完成！", "提示", JOptionPane.INFORMATION_MESSAGE);
-					System.out.println("计算物料成本完成");
-				}else if(choiceType.equals(MANUAL)) {
-					System.out.println("计算人工成本");
+					
+				}else if(choiceType.equals(ALLOCT)) {
+					System.out.println(chooseFile.getName());
+					CostAllot costAllot = new CostAllot(chooseFile);
+					try {
+						costAllot.initData();
+						costAllot.outData();
+					} catch (BiffException | IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (RowsExceededException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (WriteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					JOptionPane.showMessageDialog(null, "计算完成！", "提示", JOptionPane.INFORMATION_MESSAGE);
 				}else if(choiceType.equals(QC)) {
 					System.out.println("计算QC成本");
 				}
