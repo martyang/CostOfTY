@@ -167,8 +167,8 @@ public class CostAllot {
 		}else {
 			resultSheet = workbookResult.getSheet(0);
 			resultSheet.setName("计算结果");
-			resultSheet = workbookResult.getSheet(1);
-			resultSheet.setName("分配结果");
+			allotSheet = workbookResult.getSheet(1);
+			allotSheet.setName("分配结果");
 		}
 		
 		Label label ;
@@ -262,6 +262,61 @@ public class CostAllot {
 			}
 		}
 		
+		Sheet sheet = workbook.getSheet(1);
+		for(int k=0;k<sheet.getRows();k++) {
+			if(k==0)
+			{
+				label = new Label(0, k, "类型");
+				resultSheet.addCell(label);
+				label = new Label(2, k, "直接材料");
+				resultSheet.addCell(label);
+				label = new Label(3, k, "直接人工");
+				resultSheet.addCell(label);
+				label = new Label(4, k, "直接折旧");
+				resultSheet.addCell(label);
+				label = new Label(5, k, "其他制造费用");
+				resultSheet.addCell(label);
+				label = new Label(6, k, "间接材料");
+				resultSheet.addCell(label);
+				label = new Label(7, k, "间接工资");
+				resultSheet.addCell(label);
+				label = new Label(8, k, "间接折旧");
+				resultSheet.addCell(label);
+				label = new Label(9, k, "其他间接制造费用");
+				resultSheet.addCell(label);
+				
+			}else {
+				Cell cell = sheet.getCell(0, k);
+				label = new Label(0, k, cell.getContents());
+				allotSheet.addCell(label);
+				cell = sheet.getCell(3, k);
+				String name = cell.getContents();
+				label = new Label(1, k, cell.getContents());
+				allotSheet.addCell(label);
+				int production = Integer.parseInt(sheet.getCell(4, k).getContents());
+				for (OperateBean operateBean : opetateList) {
+					if(operateBean.getName().equals(name)) {
+						label = new Label(2, k, production*operateBean.getSingleMaterialCost()+"");
+						allotSheet.addCell(label);
+						label = new Label(3, k, production*operateBean.getSingleManCost()+"");
+						allotSheet.addCell(label);
+						label = new Label(4, k, production*operateBean.getSingleDepreciatCost()+"");
+						allotSheet.addCell(label);
+						label = new Label(5, k, production*operateBean.getSingleProductCost()+"");
+						allotSheet.addCell(label);
+						label = new Label(6, k, production*operateBean.getSingleInMaterialCost()+"");
+						allotSheet.addCell(label);
+						label = new Label(7, k, production*operateBean.getSingleInManCost()+"");
+						allotSheet.addCell(label);
+						label = new Label(8, k, production*operateBean.getSingleInDepreciatCost()+"");
+						allotSheet.addCell(label);
+						label = new Label(9, k, production*operateBean.getSingleInProductCost()+"");
+						allotSheet.addCell(label);			
+					}
+				}
+			}
+	
+		}
 		workbookResult.write();
 		workbookResult.close();
 	}
