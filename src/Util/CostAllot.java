@@ -58,8 +58,9 @@ public class CostAllot {
 				for (Cell cell : cells) {
 					if(!cell.getContents().equals("标准工时")) {
 						content = cell.getContents();
-//						System.out.println(content);
-						opetateList.get(j++).setManhour(Float.parseFloat(content));
+						if(!content.equals("")) {
+							opetateList.get(j++).setManhour(Float.parseFloat(content));
+						}						
 					}
 					
 				}
@@ -69,8 +70,9 @@ public class CostAllot {
 				for (Cell cell : cells) {
 					if(!cell.getContents().equals("产量")) {
 						content = cell.getContents();
-//						System.out.println(content);
-						opetateList.get(j++).setProduct(Integer.parseInt(content));
+						if(!content.equals("")) {
+							opetateList.get(j++).setProduct(Integer.parseInt(content));
+						}
 					}
 					
 				}
@@ -322,7 +324,10 @@ public class CostAllot {
 				label = new Label(4, k, cell.getContents());
 				allotSheet.addCell(label);
 				
-				int production = Integer.parseInt(content);
+				int production = 0;
+				if(!content.equals("")) {
+					production = Integer.parseInt(content);
+				}
 				for (OperateBean operateBean : opetateList) {
 					if(operateBean.getName().equals(name)) {
 						label = new Label(5, k, production*operateBean.getSingleMaterialCost()+"");
