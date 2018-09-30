@@ -16,6 +16,11 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
+/**
+ * 按标准物料表来分配实际物料消耗
+ * @author min.yang
+ *
+ */
 public class CommonMaterialCost {
 	private File file;	//原始资料文件
 	private File costFile;	//保存計算的結果文件
@@ -24,7 +29,7 @@ public class CommonMaterialCost {
 	private WritableSheet resultSheet;
 	private Sheet productSheet; 
 	private static String PRODUCT = "产量表";
-	private static String COST = "实际物料消耗表";
+	private static String COST = "物料消耗";
 	
 	public CommonMaterialCost(File file) {
 		this.file = file;
@@ -36,14 +41,14 @@ public class CommonMaterialCost {
 		
 		String sn;
 		String materialName;
-		Float totalCost;
+		Float totalCost = null ;
 		Label lable;
-		ArrayList<Material> standMaterial;
+		ArrayList<Material> standMaterial = null;
 		Workbook workbook = Workbook.getWorkbook(file);
 		sheets = workbook.getSheets();
-		productSheet = workbook.getSheet(PRODUCT);
-		Sheet costSheet = workbook.getSheet(COST);
-		String[] titles = new String[15];
+		productSheet = workbook.getSheet(PRODUCT);//产量表
+		Sheet costSheet = workbook.getSheet(COST);//物料消耗表
+		String[] titles = new String[20];
 		titles[0] = "物料编码";
 		titles[1] = "物料名称";
 		titles[2] = "总金额";
@@ -62,17 +67,25 @@ public class CommonMaterialCost {
 			resultSheet = workbookResult.getSheet(0);
 			resultSheet.setName("物料成本");
 		}
-		//初始化列标题
+		//初始化结果列标题
 		for(int j=0;j<titles.length;j++) {
 			lable = new Label(j, 0, titles[j]);
 			resultSheet.addCell(lable);
 		}
-		
+		//读取消耗物料表
 		for(int i=1;i<costSheet.getRows();i++) {
 			sn = costSheet.getCell(0, i).getContents();
 			materialName = costSheet.getCell(1, i).getContents();
-			totalCost = Float.valueOf(costSheet.getCell(5, i).getContents());
-			standMaterial = checkMaterial(sheets,sn);
+			String cost = costSheet.getCell(7, i).getContents();
+			if(!cost.equals(null)&&!"".equals(cost)) {
+				totalCost = Float.valueOf(cost);
+			}
+			if(sn.equals(null)||"".equals(sn)) {
+				System.out.println(sn);
+			}else {
+				standMaterial = checkMaterial(sheets,sn);
+			}
+			
 			float sum = 0 ;
 			for (Material material : standMaterial) {
 				sum += material.getNumber()*material.getProduct();
@@ -130,10 +143,10 @@ public class CommonMaterialCost {
 //		return 0;
 //	}
 	/**
-	 * 查找表格中料号为sn的所有标准物料
+	 * 查找表格sheets中料号为sn的所有标准物料，将查找到的物料加入materialList中返回
 	 * @param sheets
 	 * @param sn
-	 * @return
+	 * @return materialList
 	 */
 	private ArrayList<Material> checkMaterial(Sheet[] sheets,String sn) {
 		ArrayList<Material> materialList = new ArrayList<>();
@@ -174,7 +187,7 @@ public class CommonMaterialCost {
 		return null;
 	}
 	/**
-	 * 查找指定sheet表中的产量
+	 * 查找指定sheet表的产量
 	 * @param productSheet
 	 * @return
 	 */

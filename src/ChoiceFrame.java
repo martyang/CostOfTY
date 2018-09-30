@@ -3,6 +3,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -13,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
+import Util.CollectProjectCost;
 import Util.CommonMaterialCost;
 import Util.CostAllot;
 import jxl.read.biff.BiffException;
@@ -26,7 +29,8 @@ public class ChoiceFrame {
 //	private File[] chooseFiles;
 	private static String MATERIAL = "物料成本";
 	private static String ALLOCT = "分配全部成本";
-	private static String QC = "QC成本";
+	private static String PROJECT = "分配到项目";
+	private CostAllot costAllot = null;
 	
 	public ChoiceFrame() {
 		// TODO Auto-generated constructor stub
@@ -49,7 +53,7 @@ public class ChoiceFrame {
 		DefaultComboBoxModel<String> type = new DefaultComboBoxModel<>();
 		type.addElement(MATERIAL);
 		type.addElement(ALLOCT);
-		type.addElement(QC);
+		type.addElement(PROJECT);
 		JComboBox<String> typeCombobox = new JComboBox<>(type);
 		typeCombobox.setSelectedItem(0);
 		choiceType = (String) typeCombobox.getSelectedItem();
@@ -98,10 +102,11 @@ public class ChoiceFrame {
 					
 				}else if(choiceType.equals(ALLOCT)) {
 					System.out.println(chooseFile.getName());
-					CostAllot costAllot = new CostAllot(chooseFile);
+					costAllot = new CostAllot(chooseFile);
 					try {
 						costAllot.initData();
 						costAllot.outData();
+						
 					} catch (BiffException | IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -113,8 +118,24 @@ public class ChoiceFrame {
 						e1.printStackTrace();
 					}
 					JOptionPane.showMessageDialog(null, "计算完成！", "提示", JOptionPane.INFORMATION_MESSAGE);
-				}else if(choiceType.equals(QC)) {
-					System.out.println("计算QC成本");
+				}else if(choiceType.equals(PROJECT)) {
+					
+					CollectProjectCost projectCost = new CollectProjectCost(chooseFile);
+					try {
+						projectCost.start();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (RowsExceededException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (WriteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				
 			}
@@ -128,6 +149,6 @@ public class ChoiceFrame {
 		frame.setVisible(true);
 	}
 	
-
+	
 
 }
