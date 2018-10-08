@@ -14,6 +14,7 @@ import java.sql.Connection;
 
 public class SQLUtil {
 	static String TABLEESQL =  "CREATE TABLE projectcost("
+						  + "sourceFile varchar(20),"
 			              + "productType varchar(20),"
 			              + "productName varchar(30) not null,"
 			              + "operateType varchar(20),"
@@ -90,27 +91,28 @@ public class SQLUtil {
 	
 	//添加数据到数据库
 	public static int add(ProjectcostBean prBean) {
-		String sqlInert = "insert into projectcost(productType,productName,operateType,operateName,productOutput,"
+		String sqlInert = "insert into projectcost(sourceFile,productType,productName,operateType,operateName,productOutput,"
 				+ "materialCost,manalCoat,depreciatCost,productCost,inMaterialCost,inManalCost,inDepreciatCost,inProductCost) "
-				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		int result = 0;
 		try {
 //			Connection connect  = getConnect();
 			PreparedStatement preState = connection.prepareStatement(sqlInert);
-			preState.setString(1, prBean.getProductType());
-			preState.setString(2, prBean.getProductName());
+			preState.setString(1, prBean.getSourceFile());
+			preState.setString(2, prBean.getProductType());
+			preState.setString(3, prBean.getProductName());
 			System.out.println(prBean.getProductName());
-			preState.setString(3, prBean.getOperateType());
-			preState.setString(4, prBean.getOperateName());
-			preState.setInt(5, prBean.getProductOutput());
-			preState.setFloat(6, prBean.getMaterialCost());
-			preState.setFloat(7, prBean.getManalCoat());
-			preState.setFloat(8, prBean.getDepreciatCost());
-			preState.setFloat(9, prBean.getProductCost());
-			preState.setFloat(10, prBean.getInMaterialCost());
-			preState.setFloat(11, prBean.getInManalCost());
-			preState.setFloat(12, prBean.getInDepreciatCost());
-			preState.setFloat(13, prBean.getInProductCost());
+			preState.setString(4, prBean.getOperateType());
+			preState.setString(5, prBean.getOperateName());
+			preState.setInt(6, prBean.getProductOutput());
+			preState.setFloat(7, prBean.getMaterialCost());
+			preState.setFloat(8, prBean.getManalCoat());
+			preState.setFloat(9, prBean.getDepreciatCost());
+			preState.setFloat(10, prBean.getProductCost());
+			preState.setFloat(11, prBean.getInMaterialCost());
+			preState.setFloat(12, prBean.getInManalCost());
+			preState.setFloat(13, prBean.getInDepreciatCost());
+			preState.setFloat(14, prBean.getInProductCost());
 			result = preState.executeUpdate();
 			preState.close();
 		} catch (SQLException e) {

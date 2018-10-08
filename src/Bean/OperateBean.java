@@ -1,7 +1,9 @@
 package Bean;
 
 public class OperateBean {
+	/*产品来自的产量表名称*/
 	private String type;
+	/*操作名称*/
 	private String name;
 	private float materialCost; //直接材料
 	private float manalCoat;	//直接人工

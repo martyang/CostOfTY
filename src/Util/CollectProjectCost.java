@@ -70,9 +70,11 @@ public class CollectProjectCost {
 				System.err.println(file.getName());
 				Workbook workbook = Workbook.getWorkbook(file);
 				Sheet sheet = workbook.getSheet(0);
+				String sourceFile = sheet.getName();
 				int rows = sheet.getRows();
 				for(int i=1;i<rows;i++) {
 					ProjectcostBean projectcostBean = new ProjectcostBean();
+					projectcostBean.setSourceFile(sourceFile);
 					int index = 0;
 					String content;
 					switch(index) {
@@ -135,31 +137,33 @@ public class CollectProjectCost {
 	}
 
 	public void initSheet(WritableSheet sheet) throws RowsExceededException, WriteException {
-		Label label = new Label(0, 0, "类型");
+		Label label = new Label(0, 0, "产品来源");
 		sheet.addCell(label);
-		label = new Label(1,0,"项目");
+		label = new Label(1, 0, "类型");
 		sheet.addCell(label);
-		label = new Label(2,0,"任务类型");
+		label = new Label(2,0,"项目");
 		sheet.addCell(label);
-		label = new Label(3,0,"样本类型");
+		label = new Label(3,0,"任务类型");
 		sheet.addCell(label);
-		label = new Label(4,0,"产量");
+		label = new Label(4,0,"样本类型");
 		sheet.addCell(label);
-		label = new Label(5, 0, "直接材料");
+		label = new Label(5,0,"产量");
 		sheet.addCell(label);
-		label = new Label(6, 0, "直接人工");
+		label = new Label(6, 0, "直接材料");
 		sheet.addCell(label);
-		label = new Label(7, 0, "直接折旧");
+		label = new Label(7, 0, "直接人工");
 		sheet.addCell(label);
-		label = new Label(8, 0, "其他制造费用");
+		label = new Label(8, 0, "直接折旧");
 		sheet.addCell(label);
-		label = new Label(9, 0, "间接材料");
+		label = new Label(9, 0, "其他制造费用");
 		sheet.addCell(label);
-		label = new Label(10, 0, "间接工资");
+		label = new Label(10, 0, "间接材料");
 		sheet.addCell(label);
-		label = new Label(11, 0, "间接折旧");
+		label = new Label(11, 0, "间接工资");
 		sheet.addCell(label);
-		label = new Label(12, 0, "其他间接制造费用");
+		label = new Label(12, 0, "间接折旧");
+		sheet.addCell(label);
+		label = new Label(13, 0, "其他间接制造费用");
 		sheet.addCell(label);
 	}
 	

@@ -1,6 +1,8 @@
 package Bean;
 
 public class ProjectcostBean {
+	/*数据来源文件*/
+	private String sourceFile;
 	/*产品类型*/
 	private String productType;
 	/*产品名称*/
@@ -20,6 +22,12 @@ public class ProjectcostBean {
 	private float inDepreciatCost;	//间接折旧
 	private float inProductCost;	//间接生产
 	
+	public String getSourceFile() {
+		return sourceFile;
+	}
+	public void setSourceFile(String sourceFile) {
+		this.sourceFile = sourceFile;
+	}
 	public String getProductType() {
 		return productType;
 	}

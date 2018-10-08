@@ -54,7 +54,7 @@ public class CostAllot {
 					content = cell.getContents();
 					if(!cell.getContents().equals("人工成本")&&!content.equals(null)&&!"".equals(content)) {
 						OperateBean operate = new OperateBean();
-						operate.setType(type);	//设置操作类型
+						operate.setType(type);	//设置文件来源
 						operate.setName(cell.getContents());	//设置操作名称
 						opetateList.add(operate);
 					}
@@ -322,7 +322,7 @@ public class CostAllot {
 				allotSheet.addCell(label);
 				
 			}else {
-				ProjectcostBean projectcostBean = new ProjectcostBean();
+				ProjectcostBean projectcostBean = new ProjectcostBean();				
 				Cell cell = sheet.getCell(0, k);
 				projectcostBean.setProductType(cell.getContents());
 				label = new Label(0, k, cell.getContents());
@@ -362,6 +362,8 @@ public class CostAllot {
 				}
 				for (OperateBean operateBean : opetateList) {
 					if(operateBean.getName().equals(name)) {
+						projectcostBean.setSourceFile(operateBean.getType());
+						
 						float material = production*operateBean.getSingleMaterialCost();
 						projectcostBean.setMaterialCost(material);
 						label = new Label(5, k, material+"");
