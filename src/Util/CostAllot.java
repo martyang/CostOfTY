@@ -187,8 +187,8 @@ public class CostAllot {
 		//创建输出结果sheet表格
 		WritableWorkbook workbookResult = Workbook.createWorkbook(result);
 		if(workbookResult.getNumberOfSheets()==0) {
-			resultSheet = workbookResult.createSheet("计算结果", 0);
-			allotSheet = workbookResult.createSheet("分配结果", 1);
+			resultSheet = workbookResult.createSheet("分配率结果", 1);
+			allotSheet = workbookResult.createSheet(opetateList.get(0).getType(), 0);
 		}else {
 			resultSheet = workbookResult.getSheet(0);
 			resultSheet.setName("计算结果");
@@ -334,7 +334,7 @@ public class CostAllot {
 				if(content==""||content==null) {
 					break;
 				}
-				SQLUtil.addName(content);
+//				SQLUtil.addName(content);
 				label = new Label(1, k, cell.getContents());
 				allotSheet.addCell(label);
 				
@@ -403,7 +403,7 @@ public class CostAllot {
 						projectcostBean.setInProductCost(inproduct);
 						label = new Label(12, k, inproduct+"");
 						allotSheet.addCell(label);	
-						SQLUtil.add(projectcostBean);
+//						SQLUtil.add(projectcostBean);
 					}
 				}
 			}

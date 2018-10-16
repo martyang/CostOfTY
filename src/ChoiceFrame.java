@@ -102,11 +102,16 @@ public class ChoiceFrame {
 					
 				}else if(choiceType.equals(ALLOCT)) {
 					System.out.println(chooseFile.getName());
-					costAllot = new CostAllot(chooseFile);
+					File folder = chooseFile.getParentFile();
+					File[] files = folder.listFiles();
 					try {
-						costAllot.initData();
-						costAllot.outData();
-						
+						for (File file : files) {
+							if(file.isFile()) {
+								costAllot = new CostAllot(file);
+								costAllot.initData();
+								costAllot.outData();
+							}
+						}
 					} catch (BiffException | IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -136,6 +141,7 @@ public class ChoiceFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					JOptionPane.showMessageDialog(null, "计算完成！", "提示", JOptionPane.INFORMATION_MESSAGE);
 				}
 				
 			}

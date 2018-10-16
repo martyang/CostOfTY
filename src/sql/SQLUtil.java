@@ -101,7 +101,7 @@ public class SQLUtil {
 			preState.setString(1, prBean.getSourceFile());
 			preState.setString(2, prBean.getProductType());
 			preState.setString(3, prBean.getProductName());
-			System.out.println(prBean.getProductName());
+//			System.out.println(prBean.getProductName());
 			preState.setString(4, prBean.getOperateType());
 			preState.setString(5, prBean.getOperateName());
 			preState.setInt(6, prBean.getProductOutput());

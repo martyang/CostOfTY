@@ -30,7 +30,9 @@ public class CollectProjectCost {
 	
 	public void start() throws SQLException, IOException, RowsExceededException, WriteException {
 		File folder = inputFile.getParentFile();
-		File result = new File(folder.getParentFile(),"归集结果.xls");
+		File resultFolder = new File(inputFile.getParentFile()+"\\计算结果");
+		resultFolder.mkdirs();
+		File result = new File(resultFolder.getAbsolutePath(),"\\归集结果.xls");
 		if(result.exists()) {
 			result.delete();
 		}
@@ -44,10 +46,10 @@ public class CollectProjectCost {
 		int row = 1;
 		while (names.next()) {
 			String name = names.getString(1);
-			System.out.println(name);
+//			System.out.println(name);
 			resultSet = SQLUtil.query(name);
 			while(resultSet.next()) {
-				for(int i=1;i<14;i++) {
+				for(int i=1;i<15;i++) {
 					Label lable = new Label(i-1, row, resultSet.getObject(i).toString());
 					sheet.addCell(lable);
 //					System.out.println(resultSet.getObject(i));
@@ -77,6 +79,56 @@ public class CollectProjectCost {
 					projectcostBean.setSourceFile(sourceFile);
 					int index = 0;
 					String content;
+/**					
+					int cloum = sheet.getColumns();
+					for(int j=0;j<cloum;j++) {
+						if(j==0) {
+							projectcostBean.setProductType(sheet.getCell(0, i).getContents());
+						}else if(j==1) {
+							content = sheet.getCell(1, i).getContents();
+							if(content==null||"".equals(content)) {
+								break;
+							}else{
+								projectcostBean.setProductName(content);
+								SQLUtil.addName(content);
+							}
+						}else if(j==2) {
+							projectcostBean.setOperateType(sheet.getCell(2, i).getContents());
+						}else if(j==3) {
+							projectcostBean.setOperateName(sheet.getCell(3, i).getContents());
+						}else if(j==4) {
+							content = sheet.getCell(4, i).getContents();
+							projectcostBean.setProductOutput(Integer.parseInt(content));
+						}else if(j==5) {
+							content = sheet.getCell(5, i).getContents();
+							projectcostBean.setMaterialCost(Float.parseFloat(content));
+						}else if(j==6) {
+							content = sheet.getCell(6, i).getContents();
+							projectcostBean.setManalCoat(Float.parseFloat(content));
+						}else if(j==7) {
+							content = sheet.getCell(7, i).getContents();
+							projectcostBean.setDepreciatCost(Float.parseFloat(content));
+						}else if(j==8) {
+							content = sheet.getCell(8, i).getContents();
+							projectcostBean.setProductCost(Float.parseFloat(content));
+						}else if(j==9) {
+							content = sheet.getCell(9, i).getContents();
+							projectcostBean.setInMaterialCost(Float.parseFloat(content));
+						}else if(j==10) {
+							content = sheet.getCell(10, i).getContents();
+							projectcostBean.setInManalCost(Float.parseFloat(content));
+						}else if(j==11) {
+							content = sheet.getCell(11, i).getContents();
+							projectcostBean.setInDepreciatCost(Float.parseFloat(content));
+						}else if(j==12) {
+							content = sheet.getCell(12, i).getContents();
+							projectcostBean.setInProductCost(Float.parseFloat(content));
+						}
+						
+					}
+**/
+					
+
 					switch(index) {
 						case 0:
 							projectcostBean.setProductType(sheet.getCell(0, i).getContents());
@@ -120,6 +172,7 @@ public class CollectProjectCost {
 							content = sheet.getCell(12, i).getContents();
 							projectcostBean.setInProductCost(Float.parseFloat(content));
 					}
+
 					if(projectcostBean.getProductName()!=null) {
 						SQLUtil.add(projectcostBean);
 					}					
@@ -132,7 +185,6 @@ public class CollectProjectCost {
 				e.printStackTrace();
 			}
 		}
-		
 		
 	}
 
